@@ -3,6 +3,9 @@ import { createContext, useContext, useState } from 'react';
 const GeneralContext = createContext();
 
 const GeneralProvider = ({ children }) => {
+  const [mode, setMode] = useState('dev');
+  const [loginOpen, setLoginOpen] = useState(true);
+  const [signupOpen, setSignupOpen] = useState(true);
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
   const [ominnectModal, setOminnectModal] = useState(false);
@@ -30,9 +33,13 @@ const GeneralProvider = ({ children }) => {
   const [commentUnlikeChange, setCommentUnlikeChange] = useState(false);
   const [replyLikeChange, setReplyLikeChange] = useState(false);
   const [replyUnlikeChange, setReplyUnlikeChange] = useState(false);
+  const [tempUser, setTempUser] = useState();
 
   return (
     <GeneralContext.Provider value={{
+      mode, setMode,
+      loginOpen, setLoginOpen,
+      signupOpen, setSignupOpen,
       msgs, setMsgs,
       socketConnected, setSocketConnected,
       selectedChat, setSelectedChat,
@@ -59,7 +66,8 @@ const GeneralProvider = ({ children }) => {
       commentLikeChange, setCommentLikeChange,
       commentUnlikeChange, setCommentUnlikeChange,
       replyLikeChange, setReplyLikeChange,
-      replyUnlikeChange, setReplyUnlikeChange
+      replyUnlikeChange, setReplyUnlikeChange,
+      tempUser, setTempUser
     }}>
       {children}
     </GeneralContext.Provider>

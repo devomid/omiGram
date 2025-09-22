@@ -11,7 +11,7 @@ import LeaveGroupModal from './LeaveGroupModal';
 
 const GroupInfoModal = ({ groupInfoModal, setGroupInfoModal, fetchAgain, setFetchAgain }) => {
   const { user } = useAuthContext();
-  const { selectedChat, setSelectedChat } = GeneralState();
+  const { mode, selectedChat, setSelectedChat } = GeneralState();
   const [searchResult, setSearchResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
@@ -24,6 +24,11 @@ const GroupInfoModal = ({ groupInfoModal, setGroupInfoModal, fetchAgain, setFetc
   const [permissionToDelete, setPermissionToDelete] = useState(false);
   const [deletingUser, setDeletingUser] = useState();
   const [leaveGroupModal, setLeaveGroupModal] = useState(false);
+
+  const searchChatApi = mode === 'dev' ? process.env.REACT_APP_DEV_SEARCH_CHAT_API : process.env.REACT_APP_DEP_SEARCH_CHAT_API;
+  const renameChatApi = mode === 'dev' ? process.env.REACT_APP_DEV_RENAME_CHAT_API : process.env.REACT_APP_DEP_RENAME_CHAT_API;
+  const addUserApi = mode === 'dev' ? process.env.REACT_APP_DEV_ADD_USER_API : process.env.REACT_APP_DEP_ADD_USER_API;
+  const removeUserApi = mode === 'dev' ? process.env.REACT_APP_DEV_REMOVE_USER_API : process.env.REACT_APP_DEP_REMOVE_USER_API;
 
 
   const handleSearch = async (query) => {
@@ -42,7 +47,7 @@ const GroupInfoModal = ({ groupInfoModal, setGroupInfoModal, fetchAgain, setFetc
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.get(`https://omigramapi.onrender.com/user/search?search=${search}`, config)
+        const { data } = await axios.get(`${searchChatApi}${search}`, config)
 
         if (data.length < 1) {
           setIsLoading(false);
@@ -79,7 +84,7 @@ const GroupInfoModal = ({ groupInfoModal, setGroupInfoModal, fetchAgain, setFetc
           Authorization: `Bearer ${user.token}`
         }
       };
-      const { data } = await axios.put(`https://omigramapi.onrender.com/chats/rename`, {
+      const { data } = await axios.put(`${renameChatApi}`, {
         chatId: selectedChat._id,
         chatName: groupChatName
       }, config);
@@ -110,7 +115,7 @@ const GroupInfoModal = ({ groupInfoModal, setGroupInfoModal, fetchAgain, setFetc
           Authorization: `Bearer ${user.token}`
         }
       };
-      const { data } = await axios.put(`https://omigramapi.onrender.com/chats/groupadd`, {
+      const { data } = await axios.put(`${addUserApi}`, {
         chatId: selectedChat._id,
         userId: userToAdd._id
       }, config);
@@ -158,7 +163,7 @@ const GroupInfoModal = ({ groupInfoModal, setGroupInfoModal, fetchAgain, setFetc
 
   const removeUserFromGroup = async (chatId, userId, config) => {
     try {
-      const { data } = await axios.put(`https://omigramapi.onrender.com/chats/groupremove`, {
+      const { data } = await axios.put(`${removeUserApi}`, {
         chatId,
         userId
       }, config);

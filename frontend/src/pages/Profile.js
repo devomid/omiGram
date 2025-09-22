@@ -17,7 +17,7 @@ import { GeneralState } from '../contexts/GeneralContext';
 
 const Profile = () => {
   const [newPostOpen, setNewPostOpen] = useState(false);
-  const { setIsPostUnlikeLoading, setIsPostLikeLoading, posts, setPosts, likeChange, unlikeChange } = GeneralState();
+  const { mode, setIsPostUnlikeLoading, setIsPostLikeLoading, posts, setPosts, likeChange, unlikeChange } = GeneralState();
   const [deleteSnackOpen, setDeleteSnackOpen] = useState(false);
   const [editSnackOpen, setEditSnackOpen] = useState(false);
   const [profileOwner, setProfileOwner] = useState({});
@@ -27,13 +27,17 @@ const Profile = () => {
 
   const { username } = useParams();
 
+  const homeApi = mode === 'dev' ? process.env.REACT_APP_DEV_HOME_API : process.env.REACT_APP_DEP_HOME_API;
+  const getUserPostsApi = mode === 'dev' ? process.env.REACT_APP_DEPV_GET_USER_POSTS_API : process.env.REACT_APP_DEP_GET_USER_POSTS_API;
+
+
   const fetchFriends = async () => {
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
     };
-    const { data } = await axios.get('https://omigramapi.onrender.com/home', config)
+    const { data } = await axios.get(homeApi, config)
     setFriends(data)
     friends.map((friend => console.log(friend.username)))
   }
@@ -52,7 +56,7 @@ const Profile = () => {
         'Content-Type': 'application/json'
       }
     }
-    const { data } = await axios.get(`https://omigramapi.onrender.com/posts/${username}`, config)
+    const { data } = await axios.get(`${getUserPostsApi}${username}`, config)
     setProfileOwner(data.user);
     setPosts(data.userPosts)
   }

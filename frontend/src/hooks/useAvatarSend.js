@@ -1,12 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "./useAuthContext";
+import { GeneralState } from "../contexts/GeneralContext";
 
 export const useAvatarSend = () => {
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
+  const { mode } = GeneralState();
+  
+  const avatarApi = mode === 'dev' ? process.env.REACT_APP_DEV_AVATAR_API : process.env.REACT_APP_DEP_AVATAR_API;
+  
   const avatarSend = async (formData) => {
     try {
-      const response = await fetch('https://omigramapi.onrender.com/user/auth/signup/avatar', {
+      const response = await fetch(avatarApi, {
         method: 'POST',
         body: formData
       });

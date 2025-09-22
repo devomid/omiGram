@@ -24,7 +24,12 @@ const UserInfoModal = ({ userInfoModal, setUserInfoModal, result, setSearchModal
     const [friends, setFriends] = useState([]);
     const [buttonStatus, setButtonStatus] = useState('');
     const [ominnectModal, setOminnectModal] = useState(false);
-    const { setSelectedChat, chats, setChats } = GeneralState();
+    const { mode, setSelectedChat, chats, setChats } = GeneralState();
+
+    const getHomeApi = mode === 'dev' ? process.env.REACT_APP_DEV_HOME_API : process.env.REACT_APP_DEP_HOME_API;
+    const followApi = mode === 'dev' ? process.env.REACT_APP_DEV_FOLLOW_API : process.env.REACT_APP_DEP_FOLLOW_API;
+    const unfollowApi = mode === 'dev' ? process.env.REACT_APP_DEV_UNFOLLOW_API : process.env.REACT_APP_DEP_UNFOLLOW_API;
+    const accessChatApi = mode === 'dev' ? process.env.REACT_APP_DEV_ACCESS_CHAT_API : process.env.REACT_APP_DEP_ACCESS_CHAT_API;
 
 
     if (result) {
@@ -38,7 +43,7 @@ const UserInfoModal = ({ userInfoModal, setUserInfoModal, result, setSearchModal
             }
         };
         try {
-            const { data } = await axios.get('https://omigramapi.onrender.com/home', config);
+            const { data } = await axios.get(getHomeApi, config);
             setFriends(data);
         } catch (error) {
             setErrorOpen(true);
@@ -75,7 +80,7 @@ const UserInfoModal = ({ userInfoModal, setUserInfoModal, result, setSearchModal
         setIsLoading(true);
 
         try {
-            const response = await fetch(`https://omigramapi.onrender.com/friends/add/${result.username}`, {
+            const response = await fetch(`${followApi}${result.username}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,7 +113,7 @@ const UserInfoModal = ({ userInfoModal, setUserInfoModal, result, setSearchModal
         setIsLoading(true);
 
         try {
-            const response = await fetch(`https://omigramapi.onrender.com/friends/add/${result.username}`, {
+            const response = await fetch(`${unfollowApi}${result.username}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -148,7 +153,7 @@ const UserInfoModal = ({ userInfoModal, setUserInfoModal, result, setSearchModal
                     }
                 };
                 const matchingChat = chats.find(chat => chat.users.some(user => user.username === result.username));
-                const { data } = await axios.post('https://omigramapi.onrender.com/chats', { receiverId }, config);
+                const { data } = await axios.post(accessChatApi, { receiverId }, config);
                 if (!chats.find((c) => c._id === data._id)) {
                     setChats([data, ...chats]);
                     setSelectedChat(data);

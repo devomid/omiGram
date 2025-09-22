@@ -1,12 +1,17 @@
+import { GeneralState } from "../contexts/GeneralContext";
 import { useAuthContext } from "./useAuthContext";
 
 export const useLogin = () => {
   const { dispatch } = useAuthContext();
+  const { mode } = GeneralState();
+  
+  const loginApi = mode === 'dev' ? process.env.REACT_APP_DEV_LOGIN_API : process.env.REACT_APP_DEP_LOGIN_API;
+  
 
   const login = async (username, password) => {
     // console.log('sign in');
     try {
-      const response = await fetch('https://omigramapi.onrender.com/user/auth/login', {
+      const response = await fetch(loginApi, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

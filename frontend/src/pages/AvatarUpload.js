@@ -3,23 +3,28 @@ import { useFormik } from 'formik';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAvatarSend } from '../hooks/useAvatarSend.js';
+import { GeneralState } from '../contexts/GeneralContext.js';
 
 const AvatarUploadForm = ({ avatarOpen, setAvatarOpen, email }) => {
   const { avatarSend } = useAvatarSend();
   const [avatar, setAvatar] = useState(null);
   const navigate = useNavigate();
+  const { tempUser } = GeneralState();
 
   const onSubmit = async () => {
 
+    // console.log(tempUser);
+
+    console.log('email in avatarUpload', email);
+    console.log('avatar in avatarUpload', avatar);
     const formData = new FormData();
 
     formData.append('avatar', avatar);
     formData.append('userEmail', email);
 
     await avatarSend(formData);
-
+    localStorage.setItem('user', JSON.stringify(tempUser));
     setAvatarOpen(false);
-
     navigate('/home');
   };
 
@@ -29,7 +34,7 @@ const AvatarUploadForm = ({ avatarOpen, setAvatarOpen, email }) => {
 
   const handleAvatarChange = (e) => {
     const file = e.currentTarget.files[0];
-    console.log(file);
+    // console.log(file);
     setAvatar(file);
   };
 
@@ -43,7 +48,7 @@ const AvatarUploadForm = ({ avatarOpen, setAvatarOpen, email }) => {
   return (
     <Box>
       <Modal aria-labelledby="modal-title" aria-describedby="modal-desc" open={avatarOpen} onClose={() => setAvatarOpen(false)} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <Sheet variant="solid" sx={{ width: 350, height: 250, maxWidth: 500, borderRadius: 'lg', p: 3, boxShadow: 'lg', backgroundColor: 'white', backgroundColor: 'rgba( 214, 164, 153, 0.3) ', backdropFilter: 'saturate(80%)', border: '1px solid rgba( 255, 255, 255, 0.18 )' }}>
+        <Sheet variant="solid" sx={{ width: 350, height: 250, maxWidth: 500, borderRadius: 'lg', p: 3, boxShadow: 'lg', backgroundColor: 'rgba( 214, 164, 153, 0.3) ', backdropFilter: 'saturate(80%)', border: '1px solid rgba( 255, 255, 255, 0.18 )' }}>
           <Typography component="h2" id="modal-title" level="h4" textColor="black" fontWeight="lg" mb={1} >
             OmiGram
           </Typography>
@@ -62,7 +67,7 @@ const AvatarUploadForm = ({ avatarOpen, setAvatarOpen, email }) => {
           <Box>
             <Grid container spacing={2} columns={16} sx={{ flexGrow: 1, mt: 5 }}>
               <Grid xs={8}><Button sx={{ width: '100%' }} onClick={skip}>Upload later</Button></Grid>
-              <Grid xs={8}><Button sx={{ width: '100%' }} type="submit" loading={isSubmitting} loadingPosition="start" onClick={handleSubmit} >Upload & Finish</Button></Grid>
+              <Grid xs={8}><Button sx={{ width: '100%' }} type="submit" loading={isSubmitting} disabled={!avatar} loadingPosition="start" onClick={handleSubmit} >Upload & Finish</Button></Grid>
             </Grid>
           </Box>
 

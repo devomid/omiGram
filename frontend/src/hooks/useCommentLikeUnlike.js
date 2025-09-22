@@ -1,10 +1,16 @@
+import { GeneralState } from "../contexts/GeneralContext";
 
 export const useCommentLikeUnlike = () => {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user'));
+  const { mode } = GeneralState();
+  
+  const likeApi = mode === 'dev' ? process.env.REACT_APP_DEV_LIKE_COMMENT_API : process.env.REACT_APP_DEP_LIKE_COMMENT_API;
+  const unlikeApi = mode === 'dev' ? process.env.REACT_APP_DEV_UNLIKE_COMMENT_POST_API : process.env.REACT_APP_DEP_UNLIKE_COMMENT_POST_API;
+  
 
   const likeAComment = async (commentId) => {
     try {
-      const response = await fetch(`https://omigramapi.onrender.com/comments/like/${commentId}`, {
+      const response = await fetch(`${likeApi}${commentId}`, {
         headers: {
           'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json'
@@ -26,7 +32,7 @@ export const useCommentLikeUnlike = () => {
   const unlikeAComment = async (commentId) => {
 
     try {
-      const response = await fetch(`https://omigramapi.onrender.com/comments/unlike/${commentId}`, {
+      const response = await fetch(`${unlikeApi}${commentId}`, {
         headers: {
           'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json'

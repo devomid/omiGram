@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import UserInfoModal from '../UserInfo/UserInfoModal';
 import PuffLoader from "react-spinners/PuffLoader";
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import { GeneralState } from '../../contexts/GeneralContext';
 
 
 const SearchModal = ({ searchModal, setSearchModal }) => {
@@ -18,6 +19,10 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [userInfoModal, setUserInfoModal] = useState(false)
   const [result, setResult] = useState(null);
+  const { mode } = GeneralState();
+
+  const searchApi = mode === 'dev' ? process.env.REACT_APP_DEV_SEARCH_API : process.env.REACT_APP_DEP_SEARCH_API;
+
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -34,7 +39,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.get(`https://omigramapi.onrender.com/user/search?search=${search}`, config);
+        const { data } = await axios.get(`${searchApi}${search}`, config);
         if (data.length < 1) {
           setIsLoading(false);
           setErrorOpen(true);
@@ -73,12 +78,12 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
   return (
     <Box >
       <Modal open={searchModal} onClose={close} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <Sheet variant="solid" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'flex-start', width: 350, height: 500, borderRadius: 'lg', p: 3, boxShadow: 'lg', backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }}>
+        <Sheet variant="solid" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'flex-start', width: 350, height: 500, borderRadius: 'lg', p: 3, boxShadow: 'lg', backgroundColor: 'rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(5px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }}>
           <Stack spacing={2} sx={{ width: '100%' }}>
             <Box>
               <FormControl >
-                <FormLabel sx={{ color: 'black' }}>Search input</FormLabel>
-                <Input sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }} error={errorOpen} placeholder="Search..." type="search" onChange={(e) => handleSearch(e.target.value)} />
+                <FormLabel sx={{ color: 'rgb(242, 83, 49)' }}>Search input</FormLabel>
+                <Input sx={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(10px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }} error={errorOpen} placeholder="Search users here..." type="search" onChange={(e) => handleSearch(e.target.value)} />
               </FormControl>
             </Box>
             <Box sx={{ overflow: 'auto', scrollbarWidth: "none", '&::-webkit-scrollbar': { display: 'none' }, '&-ms-overflow-style:': { display: 'none' }, height: 440, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>

@@ -10,8 +10,10 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 
 const SendPicModal = ({ sendPicModal, setSendPicModal, chatPic, newMsg, setNewMsg, isSending, setIsSending, msgs, setMsgs }) => {
   const { user } = useAuthContext();
-  const { selectedChat } = GeneralState();
+  const { mode, selectedChat } = GeneralState();
   const [open, setOpen] = useState(false);
+
+  const sendMsgWithPicApi = mode === 'dev' ? process.env.REACT_APP_DEV_SEND_MSG_WITH_PIC_API : process.env.REACT_APP_DEP_SEND_MSG_WITH_PIC_API;
 
   const typingHandler = (e) => {
     setNewMsg(e.target.value)
@@ -41,7 +43,7 @@ const SendPicModal = ({ sendPicModal, setSendPicModal, chatPic, newMsg, setNewMs
 
         setNewMsg('');
 
-        const response = await fetch(`https://omigramapi.onrender.com/msgs/msgwithpic/${user.user._id}`, {
+        const response = await fetch(`${sendMsgWithPicApi}${user.user._id}`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           },

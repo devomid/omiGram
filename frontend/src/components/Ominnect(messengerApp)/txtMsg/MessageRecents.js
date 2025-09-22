@@ -1,6 +1,6 @@
 import { Avatar, AvatarGroup, Box, Typography } from '@mui/joy';
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GeneralState } from '../../../contexts/GeneralContext';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import MessagesSkeleton from '../../Skeleton/MessagesSkeleton';
@@ -8,7 +8,10 @@ import { getSender, getSenderFull } from '../Utils/chatLogics';
 
 const MessageRecents = ({ setPageIndicator, pageIndicator }) => {
   const { user } = useAuthContext();
-  const { selectedChat, setSelectedChat, chats, setChats, fetchAgain, setOminnectModal } = GeneralState();
+  const { mode, selectedChat, setSelectedChat, chats, setChats, fetchAgain, setOminnectModal } = GeneralState();
+  const [textToShow, setTextToShow] = useState('');
+
+  const getChatsApi = mode === 'dev' ? process.env.REACT_APP_DEV_GET_CHATS_API : process.env.REACT_APPDEP_GET_CHATS_API;
 
   const fetchChats = async () => {
     try {
@@ -17,8 +20,14 @@ const MessageRecents = ({ setPageIndicator, pageIndicator }) => {
           Authorization: `Bearer ${user.token}`
         }
       };
-      const { data } = await axios.get('https://omigramapi.onrender.com/chats', config);
-      setChats(data);
+      const { data } = await axios.get(getChatsApi, config);
+      if (data.length > 0) {
+        console.log(data);
+        setChats(data);
+      } else {
+        console.log('fuck');
+        setTextToShow("You have no message yet.")
+      }
     } catch (error) {
       //snack for no chat
     }
@@ -83,7 +92,11 @@ const MessageRecents = ({ setPageIndicator, pageIndicator }) => {
           ))}
         </Box>
       ) : (
-        <MessagesSkeleton />
+        <Box sx={{ backgroundColor: 'red' }}>
+          <Typography>
+            `${textToShow}`
+          </Typography>
+        </Box>
       )
       }
     </Box >

@@ -1,14 +1,19 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../contexts/AuthContext'
+import { GeneralState } from "../contexts/GeneralContext";
 
 const Success = () => {
   const [user, setUser] = useState(null);
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+    const { mode } = GeneralState();
+  
+  const getUserDataApi = mode === 'dev' ? process.env.REACT_APP_DEV_AUTH_SUCCESS_API : process.env.REACT_APP_DEP_AUTH_SUCCESS_API;
+
 
   const getUser = async () => {
-    const response = await fetch('https://omigramapi.onrender.com/user/auth/google/success', {
+    const response = await fetch(getUserDataApi, {
       method: 'GET',
       mode: 'cors',
       credentials: 'include',

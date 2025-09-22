@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import { AuthContext } from '../contexts/AuthContext.js';
+import { GeneralState } from "../contexts/GeneralContext.js";
 
 
 export const useGoogleCompleteProfile = () => {
   const { dispatch, user } = useContext(AuthContext);
+  const { mode } = GeneralState();
+  const googleCompleteApi = mode === 'dev' ? process.env.REACT_APP_DEV_AUTH_COMPLELETE_API : process.env.REACT_APP_DEP_AUTH_COMPLELETE_API;
+  const googleSuccessApi = mode === 'dev' ? process.env.REACT_APP_DEV_AUTH_SUCCESS_API : process.env.REACT_APP_DEP_AUTH_SUCCESS_API;
+  
   // console.log(user.user.email);
 
   const googleComplete = async function (username, birthDate, phoneNumber, password) {
@@ -11,7 +16,7 @@ export const useGoogleCompleteProfile = () => {
     const userEmail = user.user.email
 
     try {
-      const response = await fetch('https://omigramapi.onrender.com/user/auth/google/googleComplete', {
+      const response = await fetch(googleCompleteApi, {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',
@@ -26,7 +31,7 @@ export const useGoogleCompleteProfile = () => {
       const json = await response.json();
       console.log(json);
 
-      const newResponse = await fetch('https://omigramapi.onrender.com/user/auth/google/success', {
+      const newResponse = await fetch(googleSuccessApi, {
         method: 'GET',
         mode: 'cors',
         credentials: 'include',

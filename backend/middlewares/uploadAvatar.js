@@ -36,8 +36,8 @@ const uploadAvatar = async (req, res) => {
   form.parse(req, async (error, fields, files) => {
 
     const userEmail = fields.userEmail
-    // console.log('fields is: ', fields);
-    // console.log('files is: ', files);
+    console.log('fields is: ', fields);
+    console.log('files is: ', files);
     await saveAvatar(fields, files);
 
     if (error) {
@@ -49,7 +49,7 @@ const uploadAvatar = async (req, res) => {
       const file = files.avatar
       const isValid = checkFileType(file);
       const fileName = encodeURIComponent(file[0].originalFilename.replace(/&. *;+/g, '-'))
-      // console.log('file name is: ', fileName);
+      console.log('file name is: ', fileName);
       if (!isValid) {
         return res.json({ ok: false, msg: 'File type is invalid' })
       }

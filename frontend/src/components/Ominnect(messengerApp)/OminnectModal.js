@@ -22,11 +22,11 @@ const OminnectModal = ({ ominnectModal, setOminnectModal, socket }) => {
   return (
     <Box>
       <Modal open={ominnectModal} onClose={() => setOminnectModal(false)} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <Sheet variant="solid" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: 610, width: isSmallerScreen ? 450 : (isSmallScreen ? 550 : 900), borderRadius: 'lg', p: 2, boxShadow: 'lg', backgroundColor: 'rgba(255, 255, 255, 0.3)', backdropFilter: 'blur(10px) saturate(180%)', border: '1px solid rgba(209, 213, 219, 0.3)' }}>
+        <Sheet variant="solid" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: 610, width: isSmallerScreen ? 450 : (isSmallScreen ? 550 : 900), borderRadius: 'lg', p: 2, boxShadow: 'lg', backgroundColor: 'rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(6px) saturate(180%)', border: '1px solid rgba(209, 213, 219, 0.3)' }}>
 
           <Tabs aria-label="tabs" defaultValue={0} sx={{ bgcolor: 'transparent', width: '100%', height: '100%' }}>
 
-            <TabList disableUnderline sx={{ alignSelf: 'center', width: 400, p: 0.5, gap: 0.5, borderRadius: 'xl', bgcolor: 'rgba(150, 150, 150, 0.5)', [`& .${tabClasses.root}[aria-selected="true"]`]: { boxShadow: 'sm', bgcolor: 'background.surface' } }}>
+            <TabList disableUnderline sx={{ alignSelf: 'center', width: 400, p: 0.5, gap: 0.5, borderRadius: 'xl', bgcolor: 'rgba(182, 70, 45, 0.3)', [`& .${tabClasses.root}[aria-selected="true"]`]: { boxShadow: 'sm', bgcolor: 'background.surface' } }}>
               <Badge badgeInset="10px 127px" invisible={!notification.length} color="danger" size="sm" variant="solid">
                 <Tab disableIndicator>Text Messages</Tab>
               </Badge>
@@ -40,7 +40,7 @@ const OminnectModal = ({ ominnectModal, setOminnectModal, socket }) => {
                 <Grid md={4.87} lg={4.87} >
 
                   <Box display={isSmallScreen ? 'none' : 'flex'} sx={{ height: 535, width: '100%', borderRadius: 'lg', border: '1px solid black', overflow: 'auto', scrollbarWidth: "none", '&::-webkit-scrollbar': { display: 'none' }, '&-ms-overflow-style:': { display: 'none' } }}>
-                    <Box sx={{ zIndex: 1, position: 'fixed', width: '28.2%', height: 50, borderBottom: '1px solid rgba(50, 50, 50, 0.3)', background: 'none', backdropFilter: 'blur(20px) saturate(180%)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
+                    <Box sx={{ zIndex: 1, position: 'fixed', width: '28.2%', height: 50, borderBottom: '1px solid rgba(50, 50, 50, 0.3)', background: 'none', backdropFilter: 'blur(0px) saturate(180%)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
                       <Typography sx={{ ml: 2 }} color='primary'>Messages</Typography>
                       <Tooltip title='New Message' arrow placement='bottom-end' color='primary' variant='plain'>
                         <IconButton sx={{ mr: 2 }} color='primary' onClick={() => setNewChatModal(true)} variant="plain"><AddIcon /></IconButton>
@@ -58,15 +58,15 @@ const OminnectModal = ({ ominnectModal, setOminnectModal, socket }) => {
 
                   {pageIndicator === 'Messages' && isSmallScreen || isSmallerScreen ? (
                     <Box sx={{ height: 535, width: '100%', borderRadius: 'lg', border: '1px solid black', overflow: 'auto', scrollbarWidth: "none", '&::-webkit-scrollbar': { display: 'none' }, '&-ms-overflow-style:': { display: 'none' }, mr: 3, display: { xs: 'none', sm: 'none', md: 'flex' } }}>
-                      <Box sx={{ zIndex: 1, position: 'fixed', width: isSmallerScreen ? '86%' : (isSmallScreen ? '88.4%' : '62.7%'), height: 50, borderBottom: '1px solid rgba(50, 50, 50, 0.3)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography sx={{ ml: 2 }} color='primary'>Messages</Typography>
-                        <Tooltip title='New Message' arrow placement='bottom-end' color='primary' variant='plain'>
-                          <IconButton sx={{ mr: 2 }} color='primary' onClick={() => setNewChatModal(true)} variant="plain"><AddIcon /></IconButton>
-                        </Tooltip>
-                      </Box>
+                      {/* <Box sx={{ zIndex: 1, position: 'fixed', width: isSmallerScreen ? '86%' : (isSmallScreen ? '88.4%' : '62.7%'), height: 50, borderBottom: '1px solid rgba(50, 50, 50, 0.3)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> */}
+                        {/* <Typography sx={{ ml: 2 }} color='primary'>Messages</Typography> */}
+                        {/* <Tooltip title='New Message' arrow placement='bottom-end' color='primary' variant='plain'> */}
+                          {/* <IconButton sx={{ mr: 2 }} color='primary' onClick={() => setNewChatModal(true)} variant="plain"><AddIcon /></IconButton> */}
+                        {/* </Tooltip> */}
+                      {/* </Box> */}
 
                       <Box sx={{ mt: 7.5 }}>
-                        <MessageRecents setPageIndicator={setPageIndicator} pageIndicator={pageIndicator} />
+                        {/* <MessageRecents setPageIndicator={setPageIndicator} pageIndicator={pageIndicator} /> */}
                       </Box>
 
                     </Box>

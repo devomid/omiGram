@@ -50,22 +50,22 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      const socket = getSocket()
-      socket.on('msgRecieved', (newMsgRevieved) => {
-        // console.log(newMsgRevieved);
-        if (!selectedChatCompare || selectedChatCompare._id !== newMsgRevieved.chat._id) {
-          if (!notification.includes(newMsgRevieved)) {
-            setNotification([newMsgRevieved, ...notification]);
-            setFetchAgain(!fetchAgain);
-          }
-        } else {
-          setMsgs([...msgs, newMsgRevieved])
-        }
-      });
-    }
-  });
+  // useEffect(() => {
+  //   if (user) {
+  //     const socket = getSocket()
+  //     socket.on('msgRecieved', (newMsgRevieved) => {
+  //       // console.log(newMsgRevieved);
+  //       if (!selectedChatCompare || selectedChatCompare._id !== newMsgRevieved.chat._id) {
+  //         if (!notification.includes(newMsgRevieved)) {
+  //           setNotification([newMsgRevieved, ...notification]);
+  //           setFetchAgain(!fetchAgain);
+  //         }
+  //       } else {
+  //         setMsgs([...msgs, newMsgRevieved])
+  //       }
+  //     });
+  //   }
+  // });
 
   const getLocation = () => {
     // navigator.geolocation.getCurrentPosition(

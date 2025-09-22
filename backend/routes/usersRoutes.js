@@ -6,7 +6,7 @@ const verifyToken = require('../middlewares/verification');
 
 const router = express.Router();
 
-router.get('/', fuck);
+// router.get('/', fuck);
 
 
 router.get('/', verifyToken, getUser);

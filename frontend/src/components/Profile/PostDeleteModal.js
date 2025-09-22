@@ -2,15 +2,20 @@ import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import { Typography, Button, DialogActions, DialogContent, DialogTitle, Divider, Modal, ModalDialog } from '@mui/joy';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useState } from 'react';
+import { GeneralState } from '../../contexts/GeneralContext';
 
 
 const PostDeleteModal = ({ post, deletePostOpen, setDeletePostOpen, fetchUserPosts, setDeleteSnackOpen }) => {
   const { user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
+  const { mode } = GeneralState();
+
+  const deletePostApi = mode === 'dev' ? process.env.REACT_APP_DEV_DELETE_POST_API : process.env.REACT_APP_DEP_DELETE_POST_API;
+
 
   const handleDelete = async () => {
     setIsLoading(true)
-    const response = await fetch(`https://omigramapi.onrender.com/posts/${post._id}`, {
+    const response = await fetch(`${deletePostApi}${post._id}`, {
       headers: {
         'Authorization': `Bearer ${user.token}`
       },

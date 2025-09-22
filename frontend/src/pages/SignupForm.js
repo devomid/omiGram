@@ -1,21 +1,20 @@
 import { Box, Button, Grid, Link, Modal, Sheet, Stack, Typography } from '@mui/joy';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import SignupAccountInfo from '../components/Signup/SignupAccountInfo.js';
 import SignupPass from '../components/Signup/SignupPass.js';
 import SignUpPersonalInfo from '../components/Signup/SignupPersonalInfo.js';
 import { useSignup } from "../hooks/useSignup.js";
 import { UserSignupValidation } from '../validation/yupUserSchema.js';
 import AvatarUploadForm from './AvatarUpload.js';
+import { GeneralState } from '../contexts/GeneralContext.js';
 
 const SignupForm = () => {
+  const { setLoginOpen, signupOpen, setSignupOpen } = GeneralState();
   const [page, setPage] = useState(0);
   const [avatarOpen, setAvatarOpen] = useState(false);
   const FormTitles = ['Personal Info', 'Account Info', 'Password'];
-  const [open, setOpen] = useState(true);
   const { signup } = useSignup();
-  const navigate = useNavigate();
   const [inputData, setInputData] = useState({
     firstName: '',
     lastName: '',
@@ -38,13 +37,13 @@ const SignupForm = () => {
   }
 
   const onSubmit = async (values, actions) => {
-    console.log(values);
-
+    console.log('values in signUpForm', values);
+    console.log('email in signUpForm', values.email);
     await signup(values.username, values.email, values.password, values.firstName, values.lastName, values.birthDate, values.phoneNumber);
-    actions.resetForm();
-    setOpen(false)
     setAvatarOpen(true);
-    navigate('/home');
+    // actions.resetForm();
+    setSignupOpen(false)
+    setLoginOpen(false)
   };
 
   const { values, errors, touched, isSubmitting, handleSubmit, handleBlur, handleChange } = useFormik({
@@ -64,7 +63,8 @@ const SignupForm = () => {
 
   return (
     <Box>
-      <Modal aria-labelledby="modal-title" aria-describedby="modal-desc" open={open} onClose={() => setOpen(false)} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+      <AvatarUploadForm avatarOpen={avatarOpen} setAvatarOpen={setAvatarOpen} email={values.email} />
+      <Modal aria-labelledby="modal-title" aria-describedby="modal-desc" open={signupOpen} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 
         <Sheet variant="solid" sx={{ width: 350, height: 620, maxWidth: 500, borderRadius: 'lg', p: 3, boxShadow: 'lg', backgroundColor: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(20px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }}>
           <Box>
@@ -92,21 +92,14 @@ const SignupForm = () => {
                     )}
                   </Grid>
                 </Box>
-                <Link href={'/user/auth/login'}>Already have an account? Sign in here!</Link>
-                <Link href={'/user/auth/signup'}>Forgot your password? Click here!</Link>
+                <Link sx={{ color: 'lightgrey', textDecoration:'none', '&:hover': {color:'white', textDecoration:'none'} }} href={'/user/auth/login'}>Already have an account? Sign in here!</Link>
+                <Link sx={{ color: 'lightgrey', textDecoration:'none', '&:hover': {color:'white', textDecoration:'none'} }} href={'/user/auth/signup'}>Forgot your password? Click here!</Link>
               </Box>
             </Stack>
           </Box>
-          {/* <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", mt: 1.5 }}>
-            <Stepper size='sm' sx={{ width: '80%', "--Step-connectorThickness": '2px', color: 'primary' }}>
-              <Step orientation='vertical' indicator={<StepIndicator color='primary' variant='solid'></StepIndicator>}></Step>
-              <Step orientation='vertical' indicator={<StepIndicator color='primary' variant='solid'></StepIndicator>}></Step>
-              <Step orientation='vertical' indicator={<StepIndicator color='primary' variant='solid'></StepIndicator>}></Step>
-            </Stepper>
-          </Box> */}
         </Sheet>
       </Modal>
-      <AvatarUploadForm avatarOpen={avatarOpen} setAvatarOpen={setAvatarOpen} email={values.email} />
+
     </Box>
   )
 }

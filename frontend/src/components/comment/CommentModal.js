@@ -2,22 +2,26 @@ import Picker from '@emoji-mart/react';
 import CloseIcon from '@mui/icons-material/Close';
 import NorthOutlinedIcon from '@mui/icons-material/NorthOutlined';
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
-import { Box, CssVarsProvider, Dropdown, IconButton, Menu, MenuButton, Modal, Sheet, Stack, Textarea, Tooltip, Typography } from '@mui/joy';
+import { Box, Dropdown, IconButton, Menu, MenuButton, Modal, Sheet, Stack, Textarea, Tooltip, Typography } from '@mui/joy';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { GeneralState } from '../../contexts/GeneralContext';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import CommentListItem from '../maplableObj/CommentListItem';
-import theme from '../../theme';
+
 
 const CommentModal = ({ post, commentModalOpen, setCommentModalOpen }) => {
   const { user } = useAuthContext();
   const [open, setOpen] = useState(false);
   const [commentBody, setCommentBody] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [setIsLoading] = useState(false);
 
-  const { comments, setComments, fetchReply, setFetchReply, commentOwnerUsername, setCommentOwnerUsername, commentOwner, setCommentOwner, commentId, setCommentId, isReply, setIsReply, parentReply, setParentReply, isCommentLikeLoading, setIsCommentLikeLoading, isCommentUnlikeLoading, setIsCommentUnlikeLoading, commentLikeChange, setCommentLikeChange, commentUnlikeChange, setCommentUnlikeChange } = GeneralState();
+  const { mode, comments, setComments, fetchReply, setFetchReply, commentOwnerUsername, commentOwner, commentId, isReply, setIsReply, parentReply, setIsCommentLikeLoading, setIsCommentUnlikeLoading, commentLikeChange, commentUnlikeChange } = GeneralState();
+
+  const getCommentApi = mode === 'dev' ? process.env.REACT_APP_DEV_GET_COMMENT_API : process.env.REACT_APP_DEP_GET_COMMENT_API;
+  const sendCommentApi = mode === 'dev' ? process.env.REACT_APP_DEV_SEND_COMMENT_API : process.env.REACT_APP_DEP_SEND_COMMENT_API;
+  const replyCommentApi = mode === 'dev' ? process.env.REACT_APP_DEV_REPLY_COMMENT_API : process.env.REACT_APP_DEP_REPLY_COMMENT_API;
 
   const handleOpenChange = useCallback((event, isOpen) => {
     setOpen(isOpen);
@@ -41,7 +45,7 @@ const CommentModal = ({ post, commentModalOpen, setCommentModalOpen }) => {
       }
     };
     try {
-      const { data } = await axios.get(`https://omigramapi.onrender.com/comments/${post._id}`, config);
+      const { data } = await axios.get(`${getCommentApi}${post._id}`, config);
       setComments((prevComments) => ({
         ...prevComments,
         [post._id]: data
@@ -63,7 +67,7 @@ const CommentModal = ({ post, commentModalOpen, setCommentModalOpen }) => {
       }
     };
     try {
-      const { data } = await axios.post(`https://omigramapi.onrender.com/comments/newcmnt`, {
+      const { data } = await axios.post(sendCommentApi, {
         post: post._id,
         writer: user.user._id,
         commentBody
@@ -88,7 +92,7 @@ const CommentModal = ({ post, commentModalOpen, setCommentModalOpen }) => {
       }
     };
     try {
-      const { data } = await axios.post(`https://omigramapi.onrender.com/comments/reply/${commentId}`, {
+      const { data } = await axios.post(`${replyCommentApi}${commentId}`, {
         post: post._id,
         replyBody: commentBody,
         parentReply,

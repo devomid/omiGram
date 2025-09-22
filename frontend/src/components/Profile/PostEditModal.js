@@ -4,11 +4,16 @@ import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfi
 import { Box, Button, IconButton, Modal, Sheet, Stack, Textarea, Typography } from '@mui/joy';
 import React, { useState } from 'react';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { GeneralState } from '../../contexts/GeneralContext';
 
 const PostEditModal = ({ post, editPostOpen, setEditPostOpen, fetchUserPosts, setEditSnackOpen }) => {
   const { user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [postBody, setPostBody] = useState('');
+  const { mode } = GeneralState();
+  
+  const editPostApi = mode === 'dev' ? process.env.REACT_APP_DEV_EDIT_POST_API : process.env.REACT_APP_DEP_EDIT_POST_API;
+  
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -18,7 +23,7 @@ const PostEditModal = ({ post, editPostOpen, setEditPostOpen, fetchUserPosts, se
     formData.append('userId', user.user._id);
     formData.append('postBody', postBody);
 
-    const response = await fetch(`https://omigramapi.onrender.com/posts/${post._id}`, {
+    const response = await fetch(`${editPostApi}${post._id}`, {
       headers: {
         'Authorization': `Bearer ${user.token}`
       },

@@ -6,24 +6,27 @@ import { useLogin } from "../hooks/useLogin";
 import { UserSigninValidation } from '../validation/yupUserSchema.js';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Divider, FormControl, FormHelperText, Grid, IconButton, Input, Link, Modal, Sheet, Stack, SvgIcon, Tooltip, Typography } from '@mui/joy';
+import { GeneralState } from '../contexts/GeneralContext.js';
 
 const LoginForm = () => {
   const [visibility, setVisibility] = useState(true);
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
   const { login } = useLogin();
+  const { mode, loginOpen, setLoginOpen } = GeneralState();
+
+  const googleApi = mode === 'dev' ? process.env.REACT_APP_DEV_GOOGLE_AUTH_API : process.env.REACT_APP_DEP_GOOGLE_AUTH_API;
 
   const onSubmit = async (values, actions) => {
     await login(values.username, values.password);
     actions.resetForm();
-    setOpen(false);
+    setLoginOpen(false);
     navigate(`/home`);
     // window.location.reload()
     console.log('hi');
   };
 
   const google = () => {
-    window.open('https://omigramapi.onrender.com/user/auth/google', '_self')
+    window.open(googleApi, '_self')
   };
 
   const { values, errors, touched, isSubmitting, handleSubmit, handleBlur, handleChange } = useFormik({
@@ -34,7 +37,7 @@ const LoginForm = () => {
 
   return (
     <Box>
-      <Modal aria-labelledby="modal-title" aria-describedby="modal-desc" open={open} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+      <Modal aria-labelledby="modal-title" aria-describedby="modal-desc" open={loginOpen} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 
         <Sheet variant="solid" sx={{ width: 350, height: 620, maxWidth: 500, borderRadius: 'lg', p: 3, boxShadow: 'lg', backgroundColor: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(20px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }}>
 
@@ -50,8 +53,8 @@ const LoginForm = () => {
           <Box>
             <Box>
               <Stack sx={{ mt: 3 }} spacing={3}>
-                <FormControl error={errors.username && touched.username ? true : false} fullWidth>
-                  <Input type='text' id='username' name='username' value={values.username} onChange={handleChange} onBlur={handleBlur} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(20px) saturate(180%)' }} error={errors.username && touched.username ? 'true' : false} required placeholder="Username" />
+                <FormControl error={errors.username && touched.username ? true : false} >
+                  <Input type='text' id='username' name='username' value={values.username} onChange={handleChange} onBlur={handleBlur} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(20px) saturate(180%)' }} error={errors.username && touched.username ? true : false} required placeholder="Username" />
                   <FormHelperText sx={{ height: '1rem' }}>{errors.username && touched.username ? errors.username : (' ')}</FormHelperText>
                 </FormControl>
 
@@ -77,7 +80,7 @@ const LoginForm = () => {
                   <Grid xs={6}>
                     <IconButton sx={{ width: '100%' }}>
                       <SvgIcon>
-                        <svg width="800px" height="800px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Color-" transform="translate(-200.000000, -160.000000)" fill="#4460A0"><path d="M225.638355,208 L202.649232,208 C201.185673,208 200,206.813592 200,205.350603 L200,162.649211 C200,161.18585 201.185859,160 202.649232,160 L245.350955,160 C246.813955,160 248,161.18585 248,162.649211 L248,205.350603 C248,206.813778 246.813769,208 245.350955,208 L233.119305,208 L233.119305,189.411755 L239.358521,189.411755 L240.292755,182.167586 L233.119305,182.167586 L233.119305,177.542641 C233.119305,175.445287 233.701712,174.01601 236.70929,174.01601 L240.545311,174.014333 L240.545311,167.535091 C239.881886,167.446808 237.604784,167.24957 234.955552,167.24957 C229.424834,167.24957 225.638355,170.625526 225.638355,176.825209 L225.638355,182.167586 L219.383122,182.167586 L219.383122,189.411755 L225.638355,189.411755 L225.638355,208 L225.638355,208 Z" id="Facebook"></path></g></g></svg>
+                        <svg width="800px" height="800px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="Icons" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><g id="Color-" transform="translate(-200.000000, -160.000000)" fill="#4460A0"><path d="M225.638355,208 L202.649232,208 C201.185673,208 200,206.813592 200,205.350603 L200,162.649211 C200,161.18585 201.185859,160 202.649232,160 L245.350955,160 C246.813955,160 248,161.18585 248,162.649211 L248,205.350603 C248,206.813778 246.813769,208 245.350955,208 L233.119305,208 L233.119305,189.411755 L239.358521,189.411755 L240.292755,182.167586 L233.119305,182.167586 L233.119305,177.542641 C233.119305,175.445287 233.701712,174.01601 236.70929,174.01601 L240.545311,174.014333 L240.545311,167.535091 C239.881886,167.446808 237.604784,167.24957 234.955552,167.24957 C229.424834,167.24957 225.638355,170.625526 225.638355,176.825209 L225.638355,182.167586 L219.383122,182.167586 L219.383122,189.411755 L225.638355,189.411755 L225.638355,208 L225.638355,208 Z" id="Facebook"></path></g></g></svg>
                       </SvgIcon>
                     </IconButton>
                   </Grid>
@@ -86,7 +89,9 @@ const LoginForm = () => {
                   <Grid xs={6}>
                     <IconButton sx={{ width: '100%' }}>
                       <SvgIcon>
-                        <svg width="800px" height="800px" viewBox="0 -0.5 24 24" id="meteor-icon-kit__regular-github" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clipRule="evenodd" d="M12.2047 0.00001C6.56031 -0.005731 1.74628 4.08615 0.842541 9.6577C-0.061195 15.2293 3.2126 20.6331 8.56941 22.4118C9.14823 22.5177 9.35294 22.1577 9.35294 21.8541C9.35294 21.5506 9.35294 20.8588 9.35294 19.8988C6.14117 20.5977 5.46353 18.3529 5.46353 18.3529C5.25046 17.6572 4.79779 17.0595 4.18588 16.6659C3.14823 15.96 4.27059 15.96 4.27059 15.96C5.00761 16.0641 5.65578 16.5014 6.02823 17.1459C6.34368 17.7179 6.87393 18.1406 7.50179 18.3208C8.12965 18.5009 8.8034 18.4236 9.37411 18.1059C9.41842 17.5252 9.66876 16.9794 10.08 16.5671C7.5247 16.2777 4.84235 15.2894 4.84235 10.92C4.82481 9.7786 5.24688 8.67412 6.02117 7.8353C5.67632 6.84285 5.71662 5.7571 6.13412 4.79295C6.13412 4.79295 7.10117 4.48236 9.29647 5.97177C11.1816 5.45419 13.1713 5.45419 15.0565 5.97177C17.2518 4.48236 18.2118 4.79295 18.2118 4.79295C18.6351 5.74689 18.6854 6.82486 18.3529 7.81412C19.1272 8.65294 19.5493 9.7574 19.5318 10.8988C19.5318 15.3177 16.8424 16.2847 14.28 16.5459C14.8359 17.1047 15.1218 17.8774 15.0635 18.6635C15.0635 20.2024 15.0635 21.4447 15.0635 21.8188C15.0635 22.1929 15.2682 22.4824 15.8541 22.3694C21.1473 20.5447 24.3569 15.1728 23.4554 9.6469C22.5539 4.1211 17.8034 0.04779 12.2047 0.00001z" fill="#758CA3" /></svg>
+                        <svg width="9000px" height="9000px" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12,2A10,10,0,0,0,8.84,21.5c.5.08.66-.23.66-.5V19.31C6.73,19.91,6.14,18,6.14,18A2.69,2.69,0,0,0,5,16.5c-.91-.62.07-.6.07-.6a2.1,2.1,0,0,1,1.53,1,2.15,2.15,0,0,0,2.91.83,2.16,2.16,0,0,1,.63-1.34C8,16.17,5.62,15.31,5.62,11.5a3.87,3.87,0,0,1,1-2.71,3.58,3.58,0,0,1,.1-2.64s.84-.27,2.75,1a9.63,9.63,0,0,1,5,0c1.91-1.29,2.75-1,2.75-1a3.58,3.58,0,0,1,.1,2.64,3.87,3.87,0,0,1,1,2.71c0,3.82-2.34,4.66-4.57,4.91a2.39,2.39,0,0,1,.69,1.85V21c0,.27.16.59.67.5A10,10,0,0,0,12,2Z" />
+                        </svg>
                       </SvgIcon>
                     </IconButton>
                   </Grid>
@@ -99,14 +104,14 @@ const LoginForm = () => {
             </Box>
 
             <Box>
-              <Link href={'/user/auth/signup'}>Don't have an account? Signup here!</Link>
-              <Link href={'/user/auth/signup'}>Forgot your password? Click here!</Link>
+              <Link sx={{ color: 'lightgrey', textDecoration: 'none', '&:hover': { color: 'white', textDecoration: 'none' } }} href={'/user/auth/signup'}>Don't have an account? Signup here!</Link>
+              <Link sx={{ color: 'lightgrey', textDecoration: 'none', '&:hover': { color: 'white', textDecoration: 'none' } }} href={'/user/auth/signup'}>Forgot your password? Click here!</Link>
             </Box>
 
           </Box>
         </Sheet>
       </Modal>
-    </Box>
+    </Box >
 
   );
 }

@@ -25,12 +25,17 @@ const ChatRoom = ({ setOminnectModal, socket, pageIndicator, setPageIndicator })
   const isSmallerScreen = useMediaQuery('(max-width:600px)');
   const { user } = useAuthContext();
   const {
+    mode,
     msgs, setMsgs,
-    chats, setChats,
+    chats,
     selectedChat,
     fetchAgain, setFetchAgain,
     socketConnected,
     setSelectedChatCompare } = GeneralState();
+  
+  const getMsgsApi = mode === 'dev' ? process.env.REACT_APP_DEV_GET_MSGS_API : process.env.REACT_APP_DEP_GET_MSGS_API;
+  const sendMsgsApi = mode === 'dev' ? process.env.REACT_APP_DEV_SEND_MSGS_API : process.env.REACT_APP_DEP_SEND_MSGS_API;
+  
   const [open, setOpen] = useState(false);
   const [groupInfoModal, setGroupInfoModal] = useState(false);
   const [userInfoModal, setUserInfoModal] = useState(false);
@@ -85,7 +90,7 @@ const ChatRoom = ({ setOminnectModal, socket, pageIndicator, setPageIndicator })
           Authorization: `Bearer ${user.token}`
         }
       };
-      const { data } = await axios.get(`https://omigramapi.onrender.com/msgs/${selectedChat._id}`, config);
+      const { data } = await axios.get(`${getMsgsApi}${selectedChat._id}`, config);
       setMsgs(data);
 
     } catch (error) {
@@ -114,7 +119,7 @@ const ChatRoom = ({ setOminnectModal, socket, pageIndicator, setPageIndicator })
           }
         };
         setNewMsg('');
-        const { data } = await axios.post(`https://omigramapi.onrender.com/msgs`, {
+        const { data } = await axios.post(sendMsgsApi, {
           content: newMsg,
           chatId: selectedChat._id,
           /* post */
@@ -258,10 +263,10 @@ const ChatRoom = ({ setOminnectModal, socket, pageIndicator, setPageIndicator })
 
           <Box sx={{ height: '100%' }} >
             <Box sx={{ height: 50, background: 'none', borderBottom: 'solid 1px black', display: 'flex', justifyContent: 'center', alignItems: 'center', borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-              <Typography color='warning'>No Chat Selected Yet</Typography>
+              <Typography color='primary'>No Chat Selected Yet</Typography>
             </Box>
             <Box sx={{ height: '91%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography color='warning'>Plaese select a chat to start sharing your toughts</Typography>
+              <Typography color='primary'>Plaese select a chat to start sharing your toughts</Typography>
             </Box>
           </Box >
         )

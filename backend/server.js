@@ -52,7 +52,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
   credentials: true,
-  origin: 'https://omigram.onrender.com',
+  origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'DELETE', 'PATCH'],
 }));
 

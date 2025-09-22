@@ -5,14 +5,16 @@ import { UserEditPersonalInfoValidation } from '../../validation/yupUserSchema';
 import moment from 'moment';
 import { useFormik } from 'formik';
 import axios from 'axios';
+import { GeneralState } from '../../contexts/GeneralContext';
 
 
 const PersonalInformationTab = ({ setSettingModalOpen }) => {
   const user = JSON.parse(localStorage.getItem('user'));
   const userBirthDate = user.user.birthDate;
   const birthDateDefaultValue = moment(userBirthDate).utc().format('YYYY-MM-DD');
-
-
+  const { mode } = GeneralState();
+  
+  const getUserInfoApi = mode === 'dev' ? process.env.REACT_APP_DEV_GET_USER_INFO_API : process.env.REACT_APP_DEP_GET_USER_INFO_API;
 
   const onSubmit = async (values, actions) => {
     try {
@@ -22,7 +24,7 @@ const PersonalInformationTab = ({ setSettingModalOpen }) => {
           Authorization: `Bearer ${user.token}`
         }
       };
-      const { data } = await axios.patch(`https://omigramapi.onrender.com/user/profile/setting/${user.user._id}`, {
+      const { data } = await axios.patch(`${getUserInfoApi}${user.user._id}`, {
         firstName: values.firstName,
         lastName: values.lastName,
         birthDate: values.birthDate,

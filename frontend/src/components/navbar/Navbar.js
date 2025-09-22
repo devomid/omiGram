@@ -34,6 +34,8 @@ const Navbar = () => {
     window.location.reload()
   };
 
+  console.log(userAvatar);
+
   return (
     <Box>
 
@@ -73,7 +75,7 @@ const Navbar = () => {
                     <MenuButton sx={{ mr: 1 }} variant='plain'><NotificationsNoneOutlinedIcon color='primary' /></MenuButton>
                   </Badge>
                 </Tooltip>
-                <Menu sx={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }} placement="bottom-end">
+                <Menu sx={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(1px) saturate(180%)', borderRadius:'18px' }} placement="bottom-end">
 
                   {!notification.length && <MenuItem><Typography>No new messages</Typography></MenuItem>}
 
@@ -115,7 +117,7 @@ const Navbar = () => {
                 <Tooltip title='Account Settings' enterDelay={500} arrow color="primary" placement="bottom-end" size="md" variant="plain">
                   <MenuButton sx={{ mr: 2 }} variant='plain' startDecorator={<Avatar size='md' src={userAvatar && userAvatar.avatar} variant='plain' color='primary' />} endDecorator={<MoreVertOutlinedIcon color='primary' />} ><Typography color='primary'>{/* {user && user.firstName} */}{user.user.firstName}</Typography></MenuButton>
                 </Tooltip>
-                <Menu sx={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px) saturate(180%)', border: '1px solid rgba(50, 50, 50, 0.3)' }}>
+                <Menu sx={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(3px) saturate(180%)', borderRadius:'18px' }}>
                   <MenuItem onClick={() => navigate(`/${user.user.username}`)}><Avatar src={userAvatar && userAvatar.avatar} variant='plain' />
                     <Stack sx={{ m: 1 }}>
                       <Typography sx={{ ml: 3, mr: 2 }}>{user.user.firstName} {user.user.lastName}</Typography>

@@ -1,14 +1,19 @@
 import { useContext } from "react";
 import { AuthContext } from '../contexts/AuthContext.js';
+import { GeneralState } from "../contexts/GeneralContext.js";
 
 export const useSignup = () => {
   const { dispatch } = useContext(AuthContext);
+  const { mode, setTempUser } = GeneralState();
+  
+  const signupApi = mode === 'dev' ? process.env.REACT_APP_DEV_SIGNUP_API : process.env.REACT_APP_DEP_SIGNUP_API;
+
 
   const signup = async function (username, email, password, firstName, lastName, birthDate, phoneNumber) {
     console.log('signup');
 
     try {
-      const response = await fetch('https://omigramapi.onrender.com/user/auth/signup', {
+      const response = await fetch(signupApi, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, email, firstName, lastName, birthDate, phoneNumber })
@@ -18,8 +23,8 @@ export const useSignup = () => {
       console.log('this is json: ', json);
 
       if (response.ok) {
-        // Save the user to local storage
-        localStorage.setItem('user', JSON.stringify(json));
+        // Save the user to temp user general context because of avatar modal
+        setTempUser(json)
 
         // Update the auth context
         dispatch({

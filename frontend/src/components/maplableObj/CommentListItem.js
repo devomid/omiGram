@@ -19,7 +19,7 @@ import CommentEditModal from '../comment/CommentEditModal';
 const CommentListItem = ({ post, comment, setCommentModalOpen }) => {
   const { user } = useAuthContext();
   const { likeAComment, unlikeAComment } = useCommentLikeUnlike();
-  const { fetchReply, setFetchReply, commentOwnerUsername, setCommentOwnerUsername, commentOwner, setCommentOwner, commentId, setCommentId, isReply, setIsReply, openReplies, setOpenReplies, isCommentLikeLoading, setIsCommentLikeLoading, isCommentUnlikeLoading, setIsCommentUnlikeLoading, commentLikeChange, setCommentLikeChange, commentUnlikeChange, setCommentUnlikeChange, replyLikeChange, replyUnlikeChange } = GeneralState();
+  const { mode, fetchReply, setFetchReply, commentOwnerUsername, setCommentOwnerUsername, commentOwner, setCommentOwner, commentId, setCommentId, isReply, setIsReply, openReplies, setOpenReplies, isCommentLikeLoading, setIsCommentLikeLoading, isCommentUnlikeLoading, setIsCommentUnlikeLoading, commentLikeChange, setCommentLikeChange, commentUnlikeChange, setCommentUnlikeChange, replyLikeChange, replyUnlikeChange } = GeneralState();
   const [replies, setReplies] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [commentReplies, setCommentReplies] = useState({});
@@ -28,6 +28,8 @@ const CommentListItem = ({ post, comment, setCommentModalOpen }) => {
   const navigate = useNavigate();
   const [commentEditModalOpen, setCommentEditModalOpen] = useState(false);
   const [commentDeleteModalOpen, setCommentDeleteModalOpen] = useState(false);
+
+  const getCommentApi = mode === 'dev' ? process.env.REACT_APP_DEV_GET_COMMENT_API : process.env.REACT_APP_DEP_GET_COMMENT_API;
 
   const replyHandler = () => {
     setIsReply(true);
@@ -40,7 +42,7 @@ const CommentListItem = ({ post, comment, setCommentModalOpen }) => {
     setIsLoading(true);
     console.log('fetching');
     try {
-      const response = await fetch(`https://omigramapi.onrender.com/comments/reply/${post._id}`, {
+      const response = await fetch(`${getCommentApi}${ post._id }`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

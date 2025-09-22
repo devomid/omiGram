@@ -1,7 +1,6 @@
 import io from 'socket.io-client';
-import { GeneralState } from './contexts/GeneralContext';
 
-const ENDPOINT = 'https://omigramapi.onrender.com';
+const ENDPOINT = 'http://localhost:3001/';
 var socket;
 
 

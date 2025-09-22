@@ -29,7 +29,7 @@ const PostListItem = ({ post, fetchUserPosts, setDeleteSnackOpen, setEditSnackOp
   const { user } = useAuthContext();
   const { likeAPost } = useLike();
   const { unlikeAPost } = useUnlike();
-  const { comments, setComments, isPostUnlikeLoading, setIsPostUnlikeLoading, isPostLikeLoading, setIsPostLikeLoading, posts, setPosts, likeChange, setLikeChange, unlikeChange, setUnlikeChange } = GeneralState();
+  const { mode, comments, setComments, isPostUnlikeLoading, setIsPostUnlikeLoading, isPostLikeLoading, setIsPostLikeLoading, posts, setPosts, likeChange, setLikeChange, unlikeChange, setUnlikeChange } = GeneralState();
   const [like, setLike] = useState(false);
   const [unlike, setUnlike] = useState(false);
   const [isTextShow, setIsTextShow] = useState(false);
@@ -47,6 +47,7 @@ const PostListItem = ({ post, fetchUserPosts, setDeleteSnackOpen, setEditSnackOp
       if (post.location.latitude && post.location.longitude) {
         const lat = post.location.latitude
         const lon = post.location.longitude
+        console.log('lat & lon:', lat, lon);
         const { data } = await axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=${apiKey}`);
         const locCountry = data.features[0].properties.country
         const locCity = data.features[0].properties.city
@@ -56,6 +57,7 @@ const PostListItem = ({ post, fetchUserPosts, setDeleteSnackOpen, setEditSnackOp
         setCity(locCity);
         setNeighbourhood(locNeighbourhood);
         setStreet(locStreet);
+        console.log('lat & lon:', lat, lon, locCountry, locCity, locNeighbourhood, locStreet);
       }
     }
   };
